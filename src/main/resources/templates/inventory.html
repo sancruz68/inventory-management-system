@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Inventory Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container header-content">
+            <div>
+                <h1>Inventory Management</h1>
+                <p>Product and stock management system</p>
+            </div>
+            <a class="button button-light" th:href="@{/products/new}">
+                + Add Product
+            </a>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="page-heading">
+            <h2>Inventory Dashboard</h2>
+            <p>Manage products, track inventory, and monitor stock levels.</p>
+        </section>
+
+        <div class="alert success" th:if="${successMessage}"
+             th:text="${successMessage}"></div>
+
+        <div class="alert error" th:if="${errorMessage}"
+             th:text="${errorMessage}"></div>
+
+        <section class="stats-grid">
+            <div class="stat-card">
+                <span>Total Products</span>
+                <strong th:text="${productCount}">0</strong>
+                <p>Products in inventory</p>
+            </div>
+
+            <div class="stat-card">
+                <span>Low Stock Products</span>
+                <strong th:text="${lowStockCount}">0</strong>
+                <p>Products at or below minimum stock</p>
+            </div>
+        </section>
+
+        <section class="inventory-card">
+            <div class="card-heading">
+                <div>
+                    <h2>Products</h2>
+                    <p>View and update your current inventory.</p>
+                </div>
+                <a class="button button-primary"
+                   th:href="@{/products/new}">
+                    Add Product
+                </a>
+            </div>
+
+            <div class="empty-state" th:if="${#lists.isEmpty(products)}">
+                <h3>No products yet</h3>
+                <p>Add your first product to start tracking inventory.</p>
+            </div>
+
+            <div class="table-wrapper"
+                 th:unless="${#lists.isEmpty(products)}">
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>SKU</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Minimum</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr th:each="product : ${products}">
+                            <td th:text="${product.name}">Product</td>
+                            <td th:text="${product.sku}">SKU001</td>
+
+                            <td>
+                                $<span th:text="${#numbers.formatDecimal(product.price, 1, 2)}">0.00</span>
+                            </td>
+
+                            <td th:text="${product.quantity}">0</td>
+                            <td th:text="${product.minimumStock}">0</td>
+
+                            <td>
+                                <span class="status"
+                                      th:classappend="${product.lowStock} ? 'status-low' : 'status-good'"
+                                      th:text="${product.lowStock} ? 'Low Stock' : 'In Stock'">
+                                    Status
+                                </span>
+                            </td>
+
+                            <td>
+                                <div class="action-group">
+                                    <a class="text-link"
+                                       th:href="@{/products/{id}/edit(id=${product.id})}">
+                                        Edit
+                                    </a>
+
+                                    <form th:action="@{/products/{id}/stock(id=${product.id})}"
+                                          method="post"
+                                          class="stock-form">
+                                        <input type="number"
+                                               name="adjustment"
+                                               value="1"
+                                               required
+                                               aria-label="Stock adjustment">
+                                        <button type="submit">Adjust</button>
+                                    </form>
+
+                                    <form th:action="@{/products/{id}/delete(id=${product.id})}"
+                                          method="post"
+                                          onsubmit="return confirm('Delete this product?');">
+                                        <button type="submit" class="delete-button">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        Inventory Management System | Java & Spring Boot
+    </footer>
+</body>
+</html>

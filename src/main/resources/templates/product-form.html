@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${pageTitle}">Product Form</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container header-content">
+            <div>
+                <h1>Inventory Management</h1>
+                <p>Product and stock management system</p>
+            </div>
+
+            <a class="button button-light" th:href="@{/}">
+                Back to Dashboard
+            </a>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="page-heading">
+            <h2 th:text="${pageTitle}">Add Product</h2>
+            <p>Enter the product information below.</p>
+        </section>
+
+        <section class="form-card">
+            <form th:action="${formAction}"
+                  th:object="${product}"
+                  method="post">
+
+                <div class="form-group">
+                    <label for="name">Product Name</label>
+                    <input id="name"
+                           type="text"
+                           th:field="*{name}"
+                           placeholder="Enter product name"
+                           required>
+
+                    <span class="field-error"
+                          th:if="${#fields.hasErrors('name')}"
+                          th:errors="*{name}"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="sku">SKU</label>
+                    <input id="sku"
+                           type="text"
+                           th:field="*{sku}"
+                           placeholder="Example: PROD-001"
+                           required>
+
+                    <span class="field-error"
+                          th:if="${#fields.hasErrors('sku')}"
+                          th:errors="*{sku}"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="price">Price ($)</label>
+                    <input id="price"
+                           type="number"
+                           step="0.01"
+                           min="0"
+                           th:field="*{price}"
+                           required>
+
+                    <span class="field-error"
+                          th:if="${#fields.hasErrors('price')}"
+                          th:errors="*{price}"></span>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="quantity">Quantity</label>
+                        <input id="quantity"
+                               type="number"
+                               min="0"
+                               th:field="*{quantity}"
+                               required>
+
+                        <span class="field-error"
+                              th:if="${#fields.hasErrors('quantity')}"
+                              th:errors="*{quantity}"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="minimumStock">Minimum Stock</label>
+                        <input id="minimumStock"
+                               type="number"
+                               min="0"
+                               th:field="*{minimumStock}"
+                               required>
+
+                        <span class="field-error"
+                              th:if="${#fields.hasErrors('minimumStock')}"
+                              th:errors="*{minimumStock}"></span>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="button button-primary">
+                        Save Product
+                    </button>
+
+                    <a class="button button-secondary" th:href="@{/}">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <footer class="footer">
+        Inventory Management System | Java & Spring Boot
+    </footer>
+</body>
+</html>
